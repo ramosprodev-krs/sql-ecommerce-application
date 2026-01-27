@@ -1,0 +1,9 @@
+services:
+  database:
+    image: postgres:latest
+    ports:
+      - "XXXX:XXXX"
+    environment:
+      POSTGRES_USER: XXXX
+      POSTGRES_DB: XXXX
+      POSTGRES_PASSWORD: XXXX
