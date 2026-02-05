@@ -2,6 +2,7 @@ package com.ramosprodev.sql_application.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "username")
     @NotBlank(message = "The provided username can't be blank.")
     @Min(value = 5, message = "The provided username is too short.")
-    @Min(value = 20, message = "The provided username is too long.")
+    @Max(value = 20, message = "The provided username is too long.")
     private String username;
 
     @Column(name = "password")
