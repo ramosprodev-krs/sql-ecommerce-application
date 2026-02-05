@@ -1,5 +1,6 @@
 package com.ramosprodev.sql_application.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
