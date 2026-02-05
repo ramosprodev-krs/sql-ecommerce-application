@@ -7,11 +7,10 @@ import com.ramosprodev.sql_application.entity.UserEntity;
 import com.ramosprodev.sql_application.entity.UserRole;
 import com.ramosprodev.sql_application.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -24,10 +23,18 @@ public class UserService {
         this.securityConfiguration = securityConfiguration;
     }
 
+    /*
+     * The following methods compose the CRUD methods, in this case for the user management.
+     * This class also implements the use of encoding for passwords.
+     */
+
     // CRUD Methods:
 
-    // Create
+    // 1. Create user
     public UserEntity createUser(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new IllegalArgumentException("User DTO can't be null.");
+        }
         var encodedPassword = securityConfiguration.passwordEncoder().encode(userDTO.getPassword());
         var currentTime = LocalDateTime.now();
 
@@ -44,13 +51,45 @@ public class UserService {
         return user;
     }
 
-    // Read (single user)
-    public Optional<UserEntity> readUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    // Read (all users)
+    // 2. Read all users
     public List<UserEntity> readAllUsers() {
         return userRepository.findAll();
     }
+
+    // 2.1 Read a single user
+    public UserEntity readUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+    }
+
+    // 3. Update user
+    public UserEntity updateUserById(Long id, UserDTO userDTO) {
+        UserEntity selectedUser = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        if (userDTO.getEmail() != null) {
+            selectedUser.setEmail(userDTO.getEmail());
+        }
+
+        if (userDTO.getUsername() != null) {
+            selectedUser.setUsername(userDTO.getUsername());
+        }
+
+        if (userDTO.getPassword() != null) {
+            var encodedPassword = securityConfiguration.passwordEncoder().encode(userDTO.getPassword());
+            selectedUser.setPassword(encodedPassword);
+        }
+
+        return userRepository.save(selectedUser);
+    }
+
+    // 4. Delete user
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)){
+            throw new NoSuchElementException("User not found.");
+        }
+
+        userRepository.deleteById(id);
+    }
+
 }
