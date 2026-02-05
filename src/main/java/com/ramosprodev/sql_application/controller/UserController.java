@@ -28,7 +28,7 @@ public class UserController {
     // Following CRUD Methods applied with endpoints:
 
     // 1. Create user
-    @Operation(summary = "User creation", description = "Creates a new user and registers it into the database.")
+    @Operation(summary = "User creation", description = "Creates or not a new user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully created."),
             @ApiResponse(responseCode = "400", description = "User DTO was provided null.", content = @Content),
@@ -57,15 +57,15 @@ public class UserController {
     @GetMapping("/read/all")
     public ResponseEntity<?> readAllUsers() {
         try {
-            var foundUsers = userService.readAllUsers();
-            return ResponseEntity.ok(foundUsers);
+            var selectedUsers = userService.readAllUsers();
+            return ResponseEntity.ok(selectedUsers);
         } catch (DataAccessException e) {
             return ResponseEntity.internalServerError().build();
         }
     }
 
     // 2.1 Read single user
-    @Operation(summary = "User search", description = "Returns or not the requested user.")
+    @Operation(summary = "User reading", description = "Returns or not the requested user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully found."),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
@@ -75,8 +75,8 @@ public class UserController {
     @GetMapping("/read/{id}")
     public ResponseEntity<?> readUserById(@PathVariable Long id) {
         try {
-            var searchedUser = userService.readUserById(id);
-            return ResponseEntity.ok(searchedUser);
+            var selectedUser = userService.readUserById(id);
+            return ResponseEntity.ok(selectedUser);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (DataAccessException e) {
@@ -85,7 +85,7 @@ public class UserController {
     }
 
     // 3. Update single user
-    @Operation(summary = "User data update", description = "Updates an existent user's data (username/password/e-mail).")
+    @Operation(summary = "User data update", description = "Updates or not the requested user (username/password/e-mail).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully updated and returned."),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
@@ -105,7 +105,7 @@ public class UserController {
     }
 
     // 4. Delete a single user
-    @Operation(summary = "User deletion", description = "Deletes permanently an existent user from the database.")
+    @Operation(summary = "User deletion", description = "Deletes or not the requested user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully deleted from the database.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
