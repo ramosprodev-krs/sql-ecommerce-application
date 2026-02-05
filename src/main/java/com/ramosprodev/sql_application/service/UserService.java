@@ -62,28 +62,28 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
     }
 
-    // 3. Update user
+    // 3. Update a single user
     public UserEntity updateUserById(Long id, UserDTO userDTO) {
         UserEntity selectedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
-        if (userDTO.getEmail() != null) {
-            selectedUser.setEmail(userDTO.getEmail());
-        }
-
-        if (userDTO.getUsername() != null) {
+        if (userDTO.getUsername() != null && !userDTO.getUsername().isBlank()) {
             selectedUser.setUsername(userDTO.getUsername());
         }
 
-        if (userDTO.getPassword() != null) {
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
             var encodedPassword = securityConfiguration.passwordEncoder().encode(userDTO.getPassword());
             selectedUser.setPassword(encodedPassword);
+        }
+
+        if (userDTO.getEmail() != null && !userDTO.getEmail().isBlank()) {
+            selectedUser.setEmail(userDTO.getEmail());
         }
 
         return userRepository.save(selectedUser);
     }
 
-    // 4. Delete user
+    // 4. Delete a single user
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)){
             throw new NoSuchElementException("User not found.");
