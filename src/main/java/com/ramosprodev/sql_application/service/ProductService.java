@@ -4,6 +4,7 @@ import com.ramosprodev.sql_application.dto.ProductDTO;
 import com.ramosprodev.sql_application.entity.ProductEntity;
 import com.ramosprodev.sql_application.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,6 +26,7 @@ public class ProductService {
     // CRUD Methods:
 
     // 1. Create product
+    @Transactional
     public ProductEntity createProduct(ProductDTO productDTO) {
         if (productDTO == null) {
             throw new IllegalArgumentException("Product DTO can't be null.");
@@ -40,16 +42,19 @@ public class ProductService {
     }
 
     // 2. Read all products
+    @Transactional
     public List<ProductEntity> readAllProducts() {
         return productRepository.findAll();
     }
 
     // 2.1 Read a a single product
+    @Transactional
     public ProductEntity readProductById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found."));
     }
 
     // 3. Update a single product
+    @Transactional
     public ProductEntity updateProduct(Long id, ProductDTO productDTO) {
         var selectedUser = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Product not found."));
@@ -74,6 +79,7 @@ public class ProductService {
     }
 
     // 4. Delete a single product
+    @Transactional
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
             throw new NoSuchElementException("Product not found.");
