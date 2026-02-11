@@ -32,7 +32,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully created."),
             @ApiResponse(responseCode = "400", description = "User DTO was provided null.", content = @Content),
-            @ApiResponse(responseCode = "500", description = "An Internal Server Error ocurred.", content = @Content)
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
         }
     )
     @PostMapping()
