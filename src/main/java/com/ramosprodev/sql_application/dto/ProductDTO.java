@@ -18,14 +18,12 @@ import java.math.BigDecimal;
 @Setter
 public class ProductDTO {
 
-    @Column(name = "name")
     @NotBlank(message = "The provided product name can't be blank.")
     @Min(value = 2, message = "The provided product name is too short.")
     @Max(value = 20, message = "The provided product name is too long.")
     @Schema(description = "Name the product (and the producer if you'd wish)", example = "LEGO Star Wars X-Wing")
     private String name;
 
-    @Column(name = "description")
     @NotBlank(message = "The provided description can't be blank.")
     @Min(value = 2, message = "The provided description is too short.")
     @Max(value = 20, message = "The provided description is too long.")
@@ -33,12 +31,10 @@ public class ProductDTO {
             example = "High quality LEGO pieces, offering the best comfort you can find while building.")
     private String description;
 
-    @Column(name = "stock_quantity")
     @NotNull(message = "Stock quantity cannot be negative.")
     @Schema(description = "Set the initial amount of stock for your product (can't be negative).", example = "1, 10, 20...")
     private Integer stockQuantity;
 
-    @Column(name = "price")
     @NotNull(message = "Price can't be null.")
     @Schema(description = "Set the price of your product.", example = "100.00, 200.00, 500.00...")
     private BigDecimal price;
