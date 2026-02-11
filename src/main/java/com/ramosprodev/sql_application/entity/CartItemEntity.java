@@ -1,6 +1,7 @@
 package com.ramosprodev.sql_application.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class CartItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private CartEntity cart;
 
     @ManyToOne
@@ -31,7 +33,10 @@ public class CartItemEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice;
+
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
 
 }
