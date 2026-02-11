@@ -46,11 +46,19 @@ public class CartService {
 
         var selectedCart = selectedUser.getCart();
 
+        var existingItem = selectedCart.getCartItems().stream()
+                        .filter(i -> i.getProduct().getId().equals(productId))
+                        .findFirst();
+
+        if (existingItem.isPresent()) {
+            var newItem = existingItem.get();
+            newItem.setQuantity(newItem.getQuantity() + 1);
+        } else {
+            CartItemEntity cartItem = getCartItemEntity(quantity, selectedProduct, selectedCart);
+            selectedCart.getCartItems().add(cartItem);
+        }
+
         selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
-
-        CartItemEntity cartItem = getCartItemEntity(quantity, selectedProduct, selectedCart);
-
-        selectedCart.getCartItems().add(cartItem);
 
         productRepository.save(selectedProduct);
         return cartRepository.save(selectedCart);
