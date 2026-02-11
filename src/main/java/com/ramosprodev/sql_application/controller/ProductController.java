@@ -48,7 +48,7 @@ public class ProductController {
     // 2. Read all products
     @Operation(summary = "Products list", description =  "Returns a list of all the products.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product created successfully.", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Products found successfully.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
     @GetMapping("/read/all")
@@ -66,7 +66,7 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully found."),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error ocurred.", content = @Content)
+            @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @GetMapping("/read/{id}")
     public ResponseEntity<?> readProductById(@PathVariable Long id) {
@@ -86,7 +86,7 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error ocurred.", content = @Content)
+            @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @PatchMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDTO productDTO) {
@@ -105,7 +105,7 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully deleted."),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error ocurred.", content = @Content)
+            @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
