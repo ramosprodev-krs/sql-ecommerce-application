@@ -7,6 +7,8 @@ import com.ramosprodev.sql_application.entity.UserEntity;
 import com.ramosprodev.sql_application.entity.UserRole;
 import com.ramosprodev.sql_application.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,10 +33,16 @@ public class UserService {
     // CRUD Methods:
 
     // 1. Create user
+    @Transactional
     public UserEntity createUser(UserDTO userDTO) {
         if (userDTO == null) {
             throw new IllegalArgumentException("User DTO can't be null.");
         }
+
+        if (userRepository.existsByUsername(userDTO.getUsername()) || userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException("User already exists.");
+        }
+
         var encodedPassword = securityConfiguration.passwordEncoder().encode(userDTO.getPassword());
         var currentTime = LocalDateTime.now();
 
@@ -52,17 +60,20 @@ public class UserService {
     }
 
     // 2. Read all users
+    @Transactional
     public List<UserEntity> readAllUsers() {
         return userRepository.findAll();
     }
 
     // 2.1 Read a single user
+    @Transactional
     public UserEntity readUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
     }
 
     // 3. Update a single user
+    @Transactional
     public UserEntity updateUserById(Long id, UserDTO userDTO) {
         UserEntity selectedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
@@ -84,6 +95,7 @@ public class UserService {
     }
 
     // 4. Delete a single user
+    @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)){
             throw new NoSuchElementException("User not found.");
