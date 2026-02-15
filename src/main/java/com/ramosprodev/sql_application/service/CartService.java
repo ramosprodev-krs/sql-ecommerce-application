@@ -34,7 +34,6 @@ public class CartService {
      * Emptying your cart
      */
 
-
     // 1. Add item to cart
     @Transactional
     public CartEntity addItemToCart(Long userId, Long productId, Integer quantity) {
@@ -46,19 +45,19 @@ public class CartService {
 
         var selectedCart = selectedUser.getCart();
 
-        var existingItem = selectedCart.getCartItems().stream()
-                        .filter(i -> i.getProduct().getId().equals(productId))
-                        .findFirst();
+        var selectedItem = selectedCart.getCartItems().stream()
+                .filter(i -> i.getProduct().getId().equals(productId))
+                .findFirst();
 
-        if (existingItem.isPresent()) {
-            var newItem = existingItem.get();
+        if (selectedItem.isPresent()) {
+            CartItemEntity newItem = selectedItem.get();
             newItem.setQuantity(newItem.getQuantity() + 1);
+            selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - 1);
         } else {
             CartItemEntity cartItem = getCartItemEntity(quantity, selectedProduct, selectedCart);
             selectedCart.getCartItems().add(cartItem);
+            selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
         }
-
-        selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
 
         productRepository.save(selectedProduct);
         return cartRepository.save(selectedCart);
