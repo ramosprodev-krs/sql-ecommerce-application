@@ -23,7 +23,7 @@ public class CartController {
     }
 
     // 1. Cart item addition method
-    @Operation(summary = "Cart item addition", description = "Adds or not the requested item to the cart." )
+    @Operation(summary = "Cart item addition", description = "Adds the requested item to the cart." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Item successfully added."),
             @ApiResponse(responseCode = "404", description = "User or product not found.", content = @Content),
