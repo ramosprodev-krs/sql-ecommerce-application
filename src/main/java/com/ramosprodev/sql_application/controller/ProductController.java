@@ -27,7 +27,7 @@ public class ProductController {
     // Following CRUD Methods applied with endpoints:
 
     // 1. Create product
-    @Operation(summary = "Product creation", description = "Creates or not a new product.")
+    @Operation(summary = "Product creation", description = "Creates a new product.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product created successfully."),
             @ApiResponse(responseCode = "400", description = "Product DTO was provided null.", content = @Content),
@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     // 2.1 Read a single product
-    @Operation(summary = "Product reading", description = "Returns or not the requested product." )
+    @Operation(summary = "Product reading", description = "Returns the requested product." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully found."),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
@@ -82,7 +82,7 @@ public class ProductController {
 
     // 3. Update a single product
     @Operation(summary = "Product data update",
-            description = "Updates or not the requested product (name/description/stock quantity/price)." )
+            description = "Updates the requested product (name/description/stock quantity/price)." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
@@ -101,7 +101,7 @@ public class ProductController {
     }
 
     // 4. Delete a single product
-    @Operation(summary = "Product deletion", description = "Deletes or not the requested product." )
+    @Operation(summary = "Product deletion", description = "Deletes the requested product." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully deleted."),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),

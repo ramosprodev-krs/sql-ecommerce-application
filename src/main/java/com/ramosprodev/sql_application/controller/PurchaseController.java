@@ -27,7 +27,7 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
-    @Operation(summary = "User balance deposit", description = "Deposits or not the provided balance.")
+    @Operation(summary = "User balance deposit", description = "Deposits the provided balance.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Balance deposited successfully."),
             @ApiResponse(responseCode = "400", description = "Provided quantity invalid.", content = @Content),
@@ -48,7 +48,7 @@ public class PurchaseController {
         }
     }
 
-    @Operation(summary = "User purchase completion", description = "Deposits or not the provided balance.")
+    @Operation(summary = "User purchase completion", description = "Deposits the provided balance.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Purchase has been successfully completed."),
             @ApiResponse(responseCode = "400", description = "Provided cart is empty or insufficient balance.", content = @Content),
