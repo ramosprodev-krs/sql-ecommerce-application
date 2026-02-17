@@ -1,11 +1,13 @@
 package com.ramosprodev.sql_application.service;
 
-import com.ramosprodev.sql_application.configuration.SecurityConfiguration;
 import com.ramosprodev.sql_application.dto.UserDTO;
 import com.ramosprodev.sql_application.entity.CartEntity;
 import com.ramosprodev.sql_application.entity.UserEntity;
-import com.ramosprodev.sql_application.entity.UserRole;
 import com.ramosprodev.sql_application.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +17,26 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final SecurityConfiguration securityConfiguration;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, SecurityConfiguration securityConfiguration) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.securityConfiguration = securityConfiguration;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /*
      * The following methods compose the CRUD methods, in this case for the user management.
      * This class also implements the use of encoding for passwords.
      */
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
 
     // CRUD Methods:
 
@@ -43,7 +51,7 @@ public class UserService {
             throw new IllegalArgumentException("User already exists.");
         }
 
-        var encodedPassword = securityConfiguration.passwordEncoder().encode(userDTO.getPassword());
+        var encodedPassword = passwordEncoder.encode(userDTO.getPassword());
         var currentTime = LocalDateTime.now();
 
         UserEntity user = new UserEntity();
@@ -52,7 +60,7 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setUserBalance(BigDecimal.valueOf(0.0));
         user.setCart(new CartEntity());
-        user.setUserRole(UserRole.USER);
+        user.setUserRole(userDTO.getUserRole());
         user.setCreatedAt(currentTime);
 
         userRepository.save(user);
@@ -83,7 +91,7 @@ public class UserService {
         }
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
-            var encodedPassword = securityConfiguration.passwordEncoder().encode(userDTO.getPassword());
+            var encodedPassword = passwordEncoder.encode(userDTO.getPassword());
             selectedUser.setPassword(encodedPassword);
         }
 
