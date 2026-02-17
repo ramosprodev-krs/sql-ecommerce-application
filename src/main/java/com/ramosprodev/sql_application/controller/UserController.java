@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
@@ -28,14 +29,16 @@ public class UserController {
     // Following CRUD Methods applied with endpoints:
 
     // 1. Create user
-    @Operation(summary = "User creation", description = "Creates or not a new user.")
+    @Operation(summary = "User creation", description = "Creates a new user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully created."),
             @ApiResponse(responseCode = "400", description = "User DTO was provided null.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized to create users.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
         }
     )
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
             UserEntity createdUser = userService.createUser(userDTO);
@@ -51,10 +54,12 @@ public class UserController {
     @Operation(summary = "Users list", description = "Returns a list of all users.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users successfully found."),
+            @ApiResponse(responseCode = "403", description = "You are not authorized to read other users.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
     )
     @GetMapping("/read/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> readAllUsers() {
         try {
             var selectedUsers = userService.readAllUsers();
@@ -65,14 +70,16 @@ public class UserController {
     }
 
     // 2.1 Read single user
-    @Operation(summary = "User reading", description = "Returns or not the requested user.")
+    @Operation(summary = "User reading", description = "Returns the requested user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully found."),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized to read another user.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
     )
     @GetMapping("/read/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<?> readUserById(@PathVariable Long id) {
         try {
             var selectedUser = userService.readUserById(id);
@@ -85,14 +92,16 @@ public class UserController {
     }
 
     // 3. Update single user
-    @Operation(summary = "User data update", description = "Updates or not the requested user (username/password/e-mail).")
+    @Operation(summary = "User data update", description = "Updates the requested user (username/password/e-mail).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully updated and returned."),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized to update another user.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
     )
     @PatchMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<?> updateUserById(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
         try {
             var updatedUser = userService.updateUserById(id, userDTO);
@@ -105,13 +114,15 @@ public class UserController {
     }
 
     // 4. Delete a single user
-    @Operation(summary = "User deletion", description = "Deletes or not the requested user.")
+    @Operation(summary = "User deletion", description = "Deletes the requested user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully deleted from the database.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized to delete another user.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
