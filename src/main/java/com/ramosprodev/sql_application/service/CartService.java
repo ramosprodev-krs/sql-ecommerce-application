@@ -87,6 +87,31 @@ public class CartService {
         cartRepository.save(selectedCart);
     }
 
+    // 3. Clear cart
+    public CartEntity clearCart(Long userId) {
+        UserEntity selectedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        CartEntity selectedCart = selectedUser.getCart();
+
+        selectedCart.getCartItems().forEach(
+                i -> {
+                    ProductEntity originalProduct = i.getProduct();
+                    originalProduct.setStockQuantity(originalProduct.getStockQuantity() + i.getQuantity());
+                });
+
+        selectedCart.getCartItems().clear();
+        return cartRepository.save(selectedCart);
+    }
+
+    // 4. Read cart
+    public CartEntity readCart(Long userId) {
+        UserEntity selectedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        return selectedUser.getCart();
+    }
+
 
     // Auxiliary methods
 
