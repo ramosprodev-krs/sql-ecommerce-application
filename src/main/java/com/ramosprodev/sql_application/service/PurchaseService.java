@@ -58,6 +58,12 @@ public class PurchaseService {
             throw new IllegalStateException("Insufficient balance to complete the purchase.");
         }
 
+        // Creating the purchase order
+        OrderEntity order = new OrderEntity();
+        LocalDateTime currentTime = LocalDateTime.now();
+        order.setPurchasedAt(currentTime);
+        order.setUser(selectedUser);
+        order.setPurchaseTotalPrice(totalAmount);
 
         selectedUser.setUserBalance(selectedUser.getUserBalance().subtract(totalAmount));
         selectedUser.setCart(new CartEntity());
