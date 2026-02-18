@@ -51,8 +51,9 @@ public class CartService {
 
         if (selectedItem.isPresent()) {
             CartItemEntity newItem = selectedItem.get();
-            newItem.setQuantity(newItem.getQuantity() + 1);
-            selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - 1);
+            newItem.setQuantity(newItem.getQuantity() + quantity);
+            newItem.setTotalPrice(newItem.getTotalPrice().add(newItem.getUnitPrice().multiply(BigDecimal.valueOf(quantity))));
+            selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
         } else {
             CartItemEntity cartItem = getCartItemEntity(quantity, selectedProduct, selectedCart);
             selectedCart.getCartItems().add(cartItem);
