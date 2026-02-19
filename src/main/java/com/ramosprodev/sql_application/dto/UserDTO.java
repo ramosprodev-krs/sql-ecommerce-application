@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.Set;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -30,5 +33,7 @@ public class UserDTO {
     @Schema(description = "Remember to use a valid E-mail.", example = "ramosprodev@gmail.com")
     private String email;
 
-    private UserRole userRole;
+    private BigDecimal userBalance;
+
+    private Set<UserRole> userRoles;
 }
