@@ -25,9 +25,13 @@ public class TokenService {
     }
 
     public String generateToken(UserEntity userEntity) {
+        var roles = userEntity.getUserRoles().stream()
+                .map(r -> r.getRole())
+                .toList();
+
         return Jwts.builder()
                 .setSubject(userEntity.getUsername())
-                .claim("role", userEntity.getUserRole().getRole())
+                .claim("role", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
