@@ -1,8 +1,10 @@
 package com.ramosprodev.sql_application.service;
 
+import com.ramosprodev.sql_application.dto.RegisterDTO;
 import com.ramosprodev.sql_application.dto.UserDTO;
 import com.ramosprodev.sql_application.entity.CartEntity;
 import com.ramosprodev.sql_application.entity.UserEntity;
+import com.ramosprodev.sql_application.entity.UserRole;
 import com.ramosprodev.sql_application.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,9 +60,36 @@ public class UserService implements UserDetailsService {
         user.setUsername(userDTO.getUsername());
         user.setPassword(encodedPassword);
         user.setEmail(userDTO.getEmail());
+        user.setUserBalance(userDTO.getUserBalance());
+        user.setCart(new CartEntity());
+        user.getUserRoles().addAll(userDTO.getUserRoles());
+        user.setCreatedAt(currentTime);
+
+        userRepository.save(user);
+        return user;
+    }
+
+    // 1.1 Register user
+    @Transactional
+    public UserEntity registerUser(RegisterDTO registerDTO) {
+        if (registerDTO == null) {
+            throw new IllegalArgumentException("Register DTO can't be null.");
+        }
+
+        if (userRepository.existsByUsername(registerDTO.getUsername()) || userRepository.existsByEmail(registerDTO.getEmail())) {
+            throw new IllegalArgumentException("User already exists.");
+        }
+
+        var encodedPassword = passwordEncoder.encode(registerDTO.getPassword());
+        var currentTime = LocalDateTime.now();
+
+        UserEntity user = new UserEntity();
+        user.setUsername(registerDTO.getUsername());
+        user.setPassword(encodedPassword);
+        user.setEmail(registerDTO.getEmail());
         user.setUserBalance(BigDecimal.valueOf(0.0));
         user.setCart(new CartEntity());
-        user.setUserRole(userDTO.getUserRole());
+        user.getUserRoles().add(UserRole.USER);
         user.setCreatedAt(currentTime);
 
         userRepository.save(user);
@@ -97,6 +126,15 @@ public class UserService implements UserDetailsService {
 
         if (userDTO.getEmail() != null && !userDTO.getEmail().isBlank()) {
             selectedUser.setEmail(userDTO.getEmail());
+        }
+
+        if (userDTO.getUserBalance() != null && userDTO.getUserBalance().compareTo(BigDecimal.ZERO) > 0) {
+            selectedUser.setUserBalance(userDTO.getUserBalance());
+        }
+
+        if (userDTO.getUserRoles() != null && !userDTO.getUserRoles().isEmpty()) {
+            selectedUser.getUserRoles().clear();
+            selectedUser.getUserRoles().addAll(userDTO.getUserRoles());
         }
 
         return userRepository.save(selectedUser);
