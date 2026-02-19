@@ -1,6 +1,7 @@
 package com.ramosprodev.sql_application.service;
 
 import com.ramosprodev.sql_application.entity.UserEntity;
+import com.ramosprodev.sql_application.entity.UserRole;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -26,7 +27,7 @@ public class TokenService {
 
     public String generateToken(UserEntity userEntity) {
         var roles = userEntity.getUserRoles().stream()
-                .map(r -> r.getRole())
+                .map(UserRole::getRole)
                 .toList();
 
         return Jwts.builder()
