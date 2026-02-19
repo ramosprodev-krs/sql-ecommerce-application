@@ -7,6 +7,7 @@ import com.ramosprodev.sql_application.entity.UserEntity;
 import com.ramosprodev.sql_application.repository.CartRepository;
 import com.ramosprodev.sql_application.repository.ProductRepository;
 import com.ramosprodev.sql_application.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +37,9 @@ public class CartService {
 
     // 1. Add item to cart
     @Transactional
-    public CartEntity addItemToCart(Long userId, Long productId, Integer quantity) {
-        var selectedUser = userRepository.findById(userId)
+    public CartEntity addItemToCart(Long productId, Integer quantity) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         var selectedProduct = productRepository.findById(productId)
@@ -66,8 +68,9 @@ public class CartService {
 
     // 2. Remove cart item
     @Transactional
-    public void removeCartItem(Long userId, Long cartItemId) {
-        UserEntity selectedUser = userRepository.findById(userId)
+    public void removeCartItem(Long cartItemId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         CartEntity selectedCart = selectedUser.getCart();
@@ -88,8 +91,9 @@ public class CartService {
     }
 
     // 3. Clear cart
-    public CartEntity clearCart(Long userId) {
-        UserEntity selectedUser = userRepository.findById(userId)
+    public CartEntity clearCart() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         CartEntity selectedCart = selectedUser.getCart();
@@ -105,8 +109,10 @@ public class CartService {
     }
 
     // 4. Read cart
-    public CartEntity readCart(Long userId) {
-        UserEntity selectedUser = userRepository.findById(userId)
+    @Transactional
+    public CartEntity readCart() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         return selectedUser.getCart();
