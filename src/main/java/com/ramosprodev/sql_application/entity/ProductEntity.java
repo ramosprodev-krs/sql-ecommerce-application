@@ -1,10 +1,7 @@
 package com.ramosprodev.sql_application.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +22,12 @@ public class ProductEntity {
 
     @Column(name = "name")
     @NotBlank(message = "The provided product name can't be blank.")
-    @Min(value = 2, message = "The provided product name is too short.")
-    @Max(value = 20, message = "The provided product name is too long.")
+    @Size(min = 5, max = 20)
     private String name;
 
     @Column(name = "description")
     @NotBlank(message = "The provided description can't be blank.")
-    @Min(value = 2, message = "The provided description is too short.")
-    @Max(value = 20, message = "The provided description is too long.")
+    @Size(min = 5, max = 20)
     private String description;
 
     @Column(name = "stock_quantity")
@@ -42,4 +37,8 @@ public class ProductEntity {
     @Column(name = "price")
     @NotNull(message = "Price can't be null.")
     private BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private UserEntity creator;
 }
