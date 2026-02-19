@@ -1,5 +1,6 @@
 package com.ramosprodev.sql_application.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -12,8 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,31 +48,48 @@ public class UserEntity implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private CartEntity cart;
 
-    private UserRole userRole;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<OrderEntity> ordersList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "creator")
+    @JsonIgnore
+    private List<ProductEntity> productsList = new ArrayList<>();
+
+    @JsonIgnore
+    private Set<UserRole> userRoles = new HashSet<>();
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(userRole.getRole()));
+        return userRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole()))
+                .toList();
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
