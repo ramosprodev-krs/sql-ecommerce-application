@@ -40,10 +40,10 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
                         ).permitAll()
 
-                        .requestMatchers("/cart/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/product/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/purchase/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/cart/**").authenticated()
+                        .requestMatchers("/product/**").authenticated()
+                        .requestMatchers("/purchase/**").authenticated()
+                        .requestMatchers("/user/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
