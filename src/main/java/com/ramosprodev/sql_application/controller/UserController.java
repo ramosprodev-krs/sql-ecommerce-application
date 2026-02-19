@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -39,7 +41,7 @@ public class UserController {
     )
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
             UserEntity createdUser = userService.createUser(userDTO);
             return ResponseEntity.ok(createdUser);
@@ -60,7 +62,7 @@ public class UserController {
     )
     @GetMapping("/read/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> readAllUsers() {
+    public ResponseEntity<List<UserEntity>> readAllUsers() {
         try {
             var selectedUsers = userService.readAllUsers();
             return ResponseEntity.ok(selectedUsers);
@@ -80,7 +82,7 @@ public class UserController {
     )
     @GetMapping("/read/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<?> readUserById(@PathVariable Long id) {
+    public ResponseEntity<UserEntity> readUserById(@PathVariable Long id) {
         try {
             var selectedUser = userService.readUserById(id);
             return ResponseEntity.ok(selectedUser);
@@ -102,7 +104,7 @@ public class UserController {
     )
     @PatchMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserEntity> updateUserById(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
         try {
             var updatedUser = userService.updateUserById(id, userDTO);
             return ResponseEntity.ok(updatedUser);
@@ -123,7 +125,7 @@ public class UserController {
     })
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
