@@ -2,6 +2,7 @@ package com.ramosprodev.sql_application.controller;
 
 import com.ramosprodev.sql_application.dto.UserDTO;
 import com.ramosprodev.sql_application.entity.UserEntity;
+import com.ramosprodev.sql_application.entity.UserRole;
 import com.ramosprodev.sql_application.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -28,14 +30,15 @@ public class UserController {
     }
 
 
-    // Following CRUD Methods applied with endpoints:
+    // Following CRUD Methods:
 
     // 1. Create user
     @Operation(summary = "User creation", description = "Creates a new user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully created."),
-            @ApiResponse(responseCode = "400", description = "User DTO was provided null.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to create users.", content = @Content),
+            @ApiResponse(responseCode = "201", description = "User successfully created."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
         }
     )
@@ -44,7 +47,7 @@ public class UserController {
     public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
             UserEntity createdUser = userService.createUser(userDTO);
-            return ResponseEntity.ok(createdUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (DataAccessException e) {
@@ -56,7 +59,8 @@ public class UserController {
     @Operation(summary = "Users list", description = "Returns a list of all users.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users successfully found."),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to read other users.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
     )
@@ -75,8 +79,10 @@ public class UserController {
     @Operation(summary = "User reading", description = "Returns the requested user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully found."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to read another user.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
     )
@@ -97,8 +103,10 @@ public class UserController {
     @Operation(summary = "User data update", description = "Updates the requested user (username/password/e-mail).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully updated and returned."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to update another user.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
     )
@@ -119,8 +127,10 @@ public class UserController {
     @Operation(summary = "User deletion", description = "Deletes the requested user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully deleted from the database.", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to delete another user.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
     @DeleteMapping("/delete/{id}")
@@ -135,4 +145,57 @@ public class UserController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    // Following alternative methods:
+
+    // 1. Promote a user to manager
+    @Operation(summary = "User manager promotion", description = "Adds the MANAGER role to the user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User promoted successfully.", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
+    })
+    @PatchMapping("/{userId}/manager")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Set<UserRole>> managerPromote(@PathVariable Long userId) {
+        try {
+            var roles = userService.managerPromote(userId);
+            return ResponseEntity.ok(roles);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // 2. Promote a user to admin
+    @Operation(summary = "User admin promotion", description = "Adds the ADMIN role to the user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User promoted successfully.", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
+    })
+    @PatchMapping("/{userId}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Set<UserRole>> adminPromote(@PathVariable Long userId) {
+        try {
+            var roles = userService.adminPromote(userId);
+            return ResponseEntity.ok(roles);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 }
