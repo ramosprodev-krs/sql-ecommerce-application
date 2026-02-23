@@ -2,6 +2,7 @@ package com.ramosprodev.sql_application.service;
 
 import com.ramosprodev.sql_application.dto.ProductDTO;
 import com.ramosprodev.sql_application.entity.ProductEntity;
+import com.ramosprodev.sql_application.entity.UserEntity;
 import com.ramosprodev.sql_application.repository.ProductRepository;
 import com.ramosprodev.sql_application.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,6 +63,15 @@ public class ProductService {
     @Transactional
     public ProductEntity readProductById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found."));
+    }
+
+    // 2.2 Get my products
+    public List<ProductEntity> getMyProducts() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity selectedUser =  userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        return selectedUser.getProductsList();
     }
 
     // 3. Update a single product
