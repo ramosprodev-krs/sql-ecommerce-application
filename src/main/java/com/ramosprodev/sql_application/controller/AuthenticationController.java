@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,7 +41,7 @@ public class AuthenticationController {
     @Operation(summary = "User login", description = "Logs the user in.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully logged in."),
-            @ApiResponse(responseCode = "403", description = "Invalid password provided.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Invalid username or password provided.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist in the database.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
@@ -57,7 +58,7 @@ public class AuthenticationController {
     // 2. Register
     @Operation(summary = "User registration", description = "Registers a new user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully registered."),
+            @ApiResponse(responseCode = "201", description = "User successfully registered."),
             @ApiResponse(responseCode = "400", description = "Register DTO was provided null.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     }
@@ -66,7 +67,7 @@ public class AuthenticationController {
     public ResponseEntity<UserEntity> createUser(@RequestBody @Valid RegisterDTO registerDTO) {
         try {
             UserEntity createdUser = userService.registerUser(registerDTO);
-            return ResponseEntity.ok(createdUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (DataAccessException e) {
