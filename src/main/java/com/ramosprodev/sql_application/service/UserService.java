@@ -3,9 +3,11 @@ package com.ramosprodev.sql_application.service;
 import com.ramosprodev.sql_application.dto.RegisterDTO;
 import com.ramosprodev.sql_application.dto.UserDTO;
 import com.ramosprodev.sql_application.entity.CartEntity;
+import com.ramosprodev.sql_application.entity.ProductEntity;
 import com.ramosprodev.sql_application.entity.UserEntity;
 import com.ramosprodev.sql_application.entity.UserRole;
 import com.ramosprodev.sql_application.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -148,6 +151,34 @@ public class UserService implements UserDetailsService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    // Alternative method
+
+    // Promotion methods:
+
+    // 1. Manager promotion
+    public Set<UserRole> managerPromote(Long userId) {
+        UserEntity selectedUser =  userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        var roles = selectedUser.getUserRoles();
+        roles.add(UserRole.MANAGER);
+
+        userRepository.save(selectedUser);
+        return roles;
+    }
+
+    // 2. Admin promotion
+    public Set<UserRole> adminPromote(Long userId) {
+        UserEntity selectedUser =  userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        var roles = selectedUser.getUserRoles();
+        roles.add(UserRole.ADMIN);
+
+        userRepository.save(selectedUser);
+        return roles;
     }
 
 }
