@@ -27,8 +27,10 @@ public class CartController {
     @Operation(summary = "Cart item addition", description = "Adds the requested item to the cart." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Item successfully added."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User or product not found.", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Provided quantity invalid.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @PostMapping("/items/{productId}")
@@ -49,9 +51,10 @@ public class CartController {
     @Operation(summary = "Cart item removal", description = "Removes the requested item from the cart." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Item successfully removed."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Cart item not found.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to remove this cart item.", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Provided data invalid.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @DeleteMapping("/items/{cartItemId}")
@@ -72,13 +75,13 @@ public class CartController {
     @Operation(summary = "Cart item reading", description = "Reads the requested cart." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cart successfully read."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Cart not found.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to read this cart.", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Provided data invalid.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @GetMapping("/read")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<CartEntity> readCart() {
         try {
             var userCart = cartService.readCart();
@@ -95,13 +98,13 @@ public class CartController {
     @Operation(summary = "Cart item clearing", description = "Clears the requested cart." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Item successfully cleared."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Cart not found.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to clear this cart.", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Provided data invalid.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
     @DeleteMapping("/clear")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<CartEntity> clearCart() {
         try {
             var userCart = cartService.clearCart();
