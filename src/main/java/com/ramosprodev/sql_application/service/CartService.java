@@ -55,12 +55,16 @@ public class CartService {
             CartItemEntity newItem = selectedItem.get();
             newItem.setQuantity(newItem.getQuantity() + quantity);
             newItem.setTotalPrice(newItem.getTotalPrice().add(newItem.getUnitPrice().multiply(BigDecimal.valueOf(quantity))));
+            selectedCart.setCartPrice(selectedCart.getCartPrice().add(newItem.getTotalPrice()));
             selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
         } else {
             CartItemEntity cartItem = getCartItemEntity(quantity, selectedProduct, selectedCart);
             selectedCart.getCartItems().add(cartItem);
+            selectedCart.setCartPrice(selectedCart.getCartPrice().add(cartItem.getTotalPrice()));
             selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
         }
+
+
 
         productRepository.save(selectedProduct);
         return cartRepository.save(selectedCart);
@@ -105,6 +109,7 @@ public class CartService {
                 });
 
         selectedCart.getCartItems().clear();
+        selectedCart.setCartPrice(BigDecimal.ZERO);
         return cartRepository.save(selectedCart);
     }
 

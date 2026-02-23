@@ -65,9 +65,7 @@ public class PurchaseService {
         }
 
         // Getting the total amount based on each total price
-        var totalAmount = selectedCart.getCartItems().stream()
-                .map(CartItemEntity::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        var totalAmount = selectedCart.getCartPrice();
 
         // Verifying user balance
         if (selectedUser.getUserBalance().compareTo(totalAmount) < 0) {
@@ -118,6 +116,15 @@ public class PurchaseService {
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         return selectedUser.getOrdersList();
+    }
+
+    // 4. Get my balance
+    public BigDecimal getMyBalance() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity selectedUser =  userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        return selectedUser.getUserBalance();
     }
 
 }
