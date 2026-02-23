@@ -32,9 +32,10 @@ public class ProductController {
     // 1. Create product
     @Operation(summary = "Product creation", description = "Creates a new product.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product created successfully."),
-            @ApiResponse(responseCode = "400", description = "Product DTO was provided null.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to create products.", content = @Content),
+            @ApiResponse(responseCode = "201", description = "Product created successfully."),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
     @PostMapping()
@@ -42,7 +43,7 @@ public class ProductController {
     public ResponseEntity<ProductEntity> createProduct(@RequestBody @Valid ProductDTO productDTO) {
         try {
             var createdProduct = productService.createProduct(productDTO);
-            return ResponseEntity.ok(createdProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (DataAccessException e) {
@@ -53,8 +54,8 @@ public class ProductController {
     // 2. Read all products
     @Operation(summary = "Products list", description =  "Returns a list of all the products.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Products found successfully.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to read products.", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Products found successfully."),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
     @GetMapping("/read/all")
@@ -71,7 +72,7 @@ public class ProductController {
     @Operation(summary = "Product reading", description = "Returns the requested product." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully found."),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to read products.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
@@ -87,12 +88,34 @@ public class ProductController {
         }
     }
 
+    // 2.2 Get my products
+    @Operation(summary = "User products list", description = "Returns the user owned products.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List returned successfully.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
+    })
+    @GetMapping("/user/get")
+    public ResponseEntity<List<ProductEntity>> getMyProducts() {
+        try {
+            var products = productService.getMyProducts();
+            return ResponseEntity.ok(products);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     // 3. Update a single product
     @Operation(summary = "Product data update",
             description = "Updates the requested product." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to update products.", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })
@@ -113,7 +136,9 @@ public class ProductController {
     @Operation(summary = "Product deletion", description = "Deletes the requested product." )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully deleted."),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to delete products.", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Product not found.", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error occurred.", content = @Content)
     })

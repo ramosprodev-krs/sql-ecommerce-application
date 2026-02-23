@@ -30,8 +30,9 @@ public class PurchaseController {
     @Operation(summary = "User balance deposit", description = "Deposits the provided balance.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Balance deposited successfully."),
-            @ApiResponse(responseCode = "400", description = "Provided quantity invalid.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to deposit.", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad format provided.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
@@ -54,7 +55,7 @@ public class PurchaseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Purchase has been successfully completed."),
             @ApiResponse(responseCode = "400", description = "Provided cart is empty or insufficient balance.", content = @Content),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to complete this purchase.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
@@ -77,7 +78,7 @@ public class PurchaseController {
     @Operation(summary = "User orders list", description = "Shows the user orders list")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List successfully returned."),
-            @ApiResponse(responseCode = "403", description = "You are not authorized to complete this request", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found.", content = @Content),
             @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
     })
@@ -91,6 +92,26 @@ public class PurchaseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // 2. Get my balance
+    @Operation(summary = "User balance", description = "Returns the user current balance.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Balance returned successfully.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "You are not logged in or authenticated.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "You are not authorized.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred.", content = @Content)
+    })
+    @GetMapping("/balance")
+    public ResponseEntity<BigDecimal> getMyBalance() {
+        try {
+            BigDecimal balance = purchaseService.getMyBalance();
+            return ResponseEntity.ok(balance);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 
