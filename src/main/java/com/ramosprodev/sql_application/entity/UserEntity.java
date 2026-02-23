@@ -34,6 +34,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "password")
     @NotBlank(message = "The provided password can't be blank.")
     @Size(min = 5)
+    @JsonIgnore
     private String password;
 
     @Column(name = "email")
@@ -41,9 +42,11 @@ public class UserEntity implements UserDetails {
     private String email;
 
     @Column(name = "user_balance")
+    @JsonIgnore
     private BigDecimal userBalance;
 
     @Column(name = "created_at")
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @OneToOne(cascade = CascadeType.ALL)
