@@ -11,6 +11,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfiguration {
 
+    /**
+     * The SwaggerConfiguration class is not always necessary, as Swagger by itself provides a functional UI.
+     * In this case, this class purpose is to adapt Swagger into receiving JWT tokens and managing their
+     * authorizations.
+     **/
+
     @Bean
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";

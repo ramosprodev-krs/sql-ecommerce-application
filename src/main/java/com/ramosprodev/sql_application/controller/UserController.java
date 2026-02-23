@@ -30,6 +30,11 @@ public class UserController {
     }
 
 
+    /**
+     * The UserController class manages the APIs related to the CRUD methods and also provides the use of
+     * alternatives methods, whose business is to promote the user to a specific role.
+     **/
+
     // Following CRUD Methods:
 
     // 1. Create user

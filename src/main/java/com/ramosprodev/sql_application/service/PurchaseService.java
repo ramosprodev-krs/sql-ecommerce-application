@@ -23,29 +23,29 @@ public class PurchaseService {
         this.orderEntityRepository = orderEntityRepository;
     }
 
-    /*
-     * The purchase service class is responsible for managing users balance in different ways:
-     * Deposit balance to a user
-     * Calculate the outcome for a purchase and evaluate its possibility
-     */
+    /**
+     * The PurchaseService class manages mainly 4 different things, those being:
+     * 1. Depositing balance to a user
+     * 2. Completing a purchase
+     * 3. Reading user orders
+     * 4. Displaying user's balance
+     **/
 
     // 1. Deposit balance
     @Transactional
     public UserEntity depositBalance(Long userId, BigDecimal balance) {
-
         // Selecting the user
         var selectedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
-        // Verifying provided quantity
+        // Validating provided balance
         if (balance.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Balanced provided has to be higher than 0.");
         }
 
-        // Depositing the provided value
+        // Adding balance to the user
         selectedUser.setUserBalance(selectedUser.getUserBalance().add(balance));
 
-        // Saving and returning the user
         return userRepository.save(selectedUser);
     }
 
@@ -120,6 +120,7 @@ public class PurchaseService {
 
     // 4. Get my balance
     public BigDecimal getMyBalance() {
+        // Selecting the user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));

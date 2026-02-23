@@ -15,6 +15,16 @@ import java.util.Date;
 @Service
 public class TokenService {
 
+    /**
+     * The TokenService class sets the token's properties for JWT.
+     * The use of those methods guarantee the security of this application.
+     **/
+
+    /*
+     * The two following attributes use values contained in the properties classes
+     * Meaning they can vary depending on your specific token.
+     */
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -25,6 +35,8 @@ public class TokenService {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
+
+    // 1. Token generation
     public String generateToken(UserEntity userEntity) {
         var roles = userEntity.getUserRoles().stream()
                 .map(UserRole::getRole)
@@ -39,6 +51,7 @@ public class TokenService {
                 .compact();
     }
 
+    // 2. Token validation
     public String validateToken(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) getSigningKey())

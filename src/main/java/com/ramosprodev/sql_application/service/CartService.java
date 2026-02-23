@@ -29,15 +29,18 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
-    /*
-     * This class is focused on providing methods for actions such as:
-     * Adding items to your cart
-     * Emptying your cart
-     */
+    /**
+     * The CartService class is responsible for 4 methods (the auxiliary method was created for a cleaner code):
+     * 1. Cart item addition
+     * 2. Cart item removal
+     * 3. Cart clearing
+     * 4. Cart reading
+     **/
 
     // 1. Add item to cart
     @Transactional
     public CartEntity addItemToCart(Long productId, Integer quantity) {
+        // Selects the current user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
@@ -45,12 +48,15 @@ public class CartService {
         var selectedProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Product not found."));
 
+        // Selects the user's cart
         var selectedCart = selectedUser.getCart();
 
+        // Selects an optional item
         var selectedItem = selectedCart.getCartItems().stream()
                 .filter(i -> i.getProduct().getId().equals(productId))
                 .findFirst();
 
+        // Validates if the item is already present in the cart or not
         if (selectedItem.isPresent()) {
             CartItemEntity newItem = selectedItem.get();
             newItem.setQuantity(newItem.getQuantity() + quantity);
@@ -64,8 +70,6 @@ public class CartService {
             selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
         }
 
-
-
         productRepository.save(selectedProduct);
         return cartRepository.save(selectedCart);
     }
@@ -73,17 +77,21 @@ public class CartService {
     // 2. Remove cart item
     @Transactional
     public void removeCartItem(Long cartItemId) {
+        // Selects the current user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         CartEntity selectedCart = selectedUser.getCart();
 
+        // Selects the cart item
         var selectedItem = selectedCart.getCartItems().stream()
                 .filter(i -> i.getId().equals(cartItemId))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Cart item not found."));
 
+
+        // Selects the original product
         var selectedProduct = productRepository.findById(selectedItem.getProduct().getId())
                 .orElseThrow(() -> new NoSuchElementException("Product not found."));
 
@@ -96,12 +104,14 @@ public class CartService {
 
     // 3. Clear cart
     public CartEntity clearCart() {
+        // Selects the current user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
         CartEntity selectedCart = selectedUser.getCart();
 
+        // Retrieve stock quantity
         selectedCart.getCartItems().forEach(
                 i -> {
                     ProductEntity originalProduct = i.getProduct();
@@ -116,6 +126,7 @@ public class CartService {
     // 4. Read cart
     @Transactional
     public CartEntity readCart() {
+        // Selects the current user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
@@ -128,12 +139,14 @@ public class CartService {
 
     // 1. Extracted method
     private static CartItemEntity getCartItemEntity(Integer quantity, ProductEntity selectedProduct, CartEntity selectedCart) {
+        // Ensures the product is available
         if (selectedProduct.getStockQuantity() < quantity) {
             throw new IllegalArgumentException("There are only " + selectedProduct.getStockQuantity() + "units available");
         }
 
         var totalPrice = selectedProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
 
+        // Creates a new cart item
         CartItemEntity cartItem = new CartItemEntity();
         cartItem.setCart(selectedCart);
         cartItem.setProduct(selectedProduct);

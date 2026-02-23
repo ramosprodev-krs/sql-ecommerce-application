@@ -27,6 +27,13 @@ public class SecurityConfiguration {
         this.securityFilter = securityFilter;
     }
 
+    /**
+     * This class allows us to set the authentications and authorizations, also providing the password encoded.
+     * In this use, it automatically authorizes swagger for while also ensuring the user is always authenticated.
+     * For further filtering, each controller (if needed) contains for its endpoints the @PreAuthorize validation.
+     **/
+
+    // 1. SecurityFilterChain bean
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -51,11 +58,13 @@ public class SecurityConfiguration {
                 .build();
     }
 
+    // 2. AuthenticationManager bean
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // 3. PasswordEncoder bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

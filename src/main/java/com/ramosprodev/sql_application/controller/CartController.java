@@ -23,6 +23,11 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /**
+     * This controller provides all the necessary methods for cart management.
+     * The @PreAuthorize validation is also present in this class.
+     **/
+
     // 1. Cart item addition method
     @Operation(summary = "Cart item addition", description = "Adds the requested item to the cart." )
     @ApiResponses(value = {

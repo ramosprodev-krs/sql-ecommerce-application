@@ -30,10 +30,15 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /*
-     * The following methods compose the CRUD methods, in this case for the user management.
-     * This class also implements the use of encoding for passwords.
-     */
+    /**
+     * The UserService class is the core of this application, managing user lifecycle and business rules.
+     * <p>
+     * It implements the UserDetailsService interface to integrate with Spring Security via the loadUserByUsername()
+     * method, ensuring the JWT authentication flow works correctly.
+     * <p>
+     * Beyond security, the class follows the CRUD pattern and includes methods to promote users by granting
+     * additional roles.
+     **/
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -46,17 +51,22 @@ public class UserService implements UserDetailsService {
     // 1. Create user
     @Transactional
     public UserEntity createUser(UserDTO userDTO) {
+        // Ensures the body isn't null
         if (userDTO == null) {
             throw new IllegalArgumentException("User DTO can't be null.");
         }
 
+        // Ensures there are no duplicates
         if (userRepository.existsByUsername(userDTO.getUsername()) || userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("User already exists.");
         }
 
+        // Encrypts the provided password
         var encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+
         var currentTime = LocalDateTime.now();
 
+        // Creates a new user
         UserEntity user = new UserEntity();
         user.setUsername(userDTO.getUsername());
         user.setPassword(encodedPassword);
@@ -73,10 +83,12 @@ public class UserService implements UserDetailsService {
     // 1.1 Register user
     @Transactional
     public UserEntity registerUser(RegisterDTO registerDTO) {
+        // Ensures the body isn't null
         if (registerDTO == null) {
             throw new IllegalArgumentException("Register DTO can't be null.");
         }
 
+        // Ensures there are no duplicates
         if (userRepository.existsByUsername(registerDTO.getUsername()) || userRepository.existsByEmail(registerDTO.getEmail())) {
             throw new IllegalArgumentException("User already exists.");
         }
@@ -84,6 +96,7 @@ public class UserService implements UserDetailsService {
         var encodedPassword = passwordEncoder.encode(registerDTO.getPassword());
         var currentTime = LocalDateTime.now();
 
+        // Registers a new default user
         UserEntity user = new UserEntity();
         user.setUsername(registerDTO.getUsername());
         user.setPassword(encodedPassword);
@@ -113,26 +126,34 @@ public class UserService implements UserDetailsService {
     // 3. Update a single user
     @Transactional
     public UserEntity updateUserById(Long id, UserDTO userDTO) {
+        // Selects the user
         UserEntity selectedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
+        // Ensures each data is not null or blank (if an update to that data is required)
+
+        // 1. Username
         if (userDTO.getUsername() != null && !userDTO.getUsername().isBlank()) {
             selectedUser.setUsername(userDTO.getUsername());
         }
 
+        // 2. Password
         if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
             var encodedPassword = passwordEncoder.encode(userDTO.getPassword());
             selectedUser.setPassword(encodedPassword);
         }
 
+        // 3. E-mail
         if (userDTO.getEmail() != null && !userDTO.getEmail().isBlank()) {
             selectedUser.setEmail(userDTO.getEmail());
         }
 
+        // 4. Balance
         if (userDTO.getUserBalance() != null && userDTO.getUserBalance().compareTo(BigDecimal.ZERO) > 0) {
             selectedUser.setUserBalance(userDTO.getUserBalance());
         }
 
+        // 5. Role
         if (userDTO.getUserRoles() != null && !userDTO.getUserRoles().isEmpty()) {
             selectedUser.getUserRoles().clear();
             selectedUser.getUserRoles().addAll(userDTO.getUserRoles());
@@ -144,6 +165,7 @@ public class UserService implements UserDetailsService {
     // 4. Delete a single user
     @Transactional
     public void deleteUser(Long id) {
+        // Ensures the user exists
         if (!userRepository.existsById(id)){
             throw new NoSuchElementException("User not found.");
         }
@@ -151,12 +173,11 @@ public class UserService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
-    // Alternative method
-
     // Promotion methods:
 
     // 1. Manager promotion
     public Set<UserRole> managerPromote(Long userId) {
+        // Selects the user
         UserEntity selectedUser =  userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
@@ -169,6 +190,7 @@ public class UserService implements UserDetailsService {
 
     // 2. Admin promotion
     public Set<UserRole> adminPromote(Long userId) {
+        // Selects the user
         UserEntity selectedUser =  userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 

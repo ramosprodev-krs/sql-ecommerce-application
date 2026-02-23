@@ -24,24 +24,28 @@ public class ProductService {
         this.userRepository = userRepository;
     }
 
-    /*
-     * The following methods compose the CRUD methods, in this case for the product management.
-     * This class acts the same way as the UserService.
-     */
+    /**
+     * The ProductService class is structured by following the CRUD pattern.
+     * Products have a deeper management depending on the user role, however it is only
+     * visible through the ProductController class.
+     **/
 
     // CRUD Methods:
 
     // 1. Create product
     @Transactional
     public ProductEntity createProduct(ProductDTO productDTO) {
+        // Ensure the provided body is not null
         if (productDTO == null) {
             throw new IllegalArgumentException("Product DTO can't be null.");
         }
 
+        // Selects the current user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         var currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
 
+        // Creates a new product
         ProductEntity product = new ProductEntity();
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
@@ -67,6 +71,7 @@ public class ProductService {
 
     // 2.2 Get my products
     public List<ProductEntity> getMyProducts() {
+        // Selects the current user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity selectedUser =  userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found."));
@@ -102,6 +107,7 @@ public class ProductService {
     // 4. Delete a single product
     @Transactional
     public void deleteProduct(Long id) {
+        // Ensures the product exists
         if (!productRepository.existsById(id)) {
             throw new NoSuchElementException("Product not found.");
         }

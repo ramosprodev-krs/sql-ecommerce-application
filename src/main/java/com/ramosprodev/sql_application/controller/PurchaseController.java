@@ -27,6 +27,12 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
+    /**
+     * This controller provides all the purchase related methods.
+     * The @PreAuthorize validation is also present in this class.
+     **/
+
+    // 1. Balance deposit
     @Operation(summary = "User balance deposit", description = "Deposits the provided balance.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Balance deposited successfully."),

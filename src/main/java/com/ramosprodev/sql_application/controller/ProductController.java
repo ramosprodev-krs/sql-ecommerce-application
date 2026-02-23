@@ -27,6 +27,11 @@ public class ProductController {
         this.productService = productService;
     }
 
+    /**
+     * This class is similar to the UserController class, when it comes to following the CRUD pattern, however the
+     * management of the products includes the MANAGER role when necessary.
+     **/
+
     // Following CRUD Methods applied with endpoints:
 
     // 1. Create product
