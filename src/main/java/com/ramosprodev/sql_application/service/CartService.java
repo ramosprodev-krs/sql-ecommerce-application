@@ -58,10 +58,22 @@ public class CartService {
 
         // Validates if the item is already present in the cart or not
         if (selectedItem.isPresent()) {
+            // Get present item data
             CartItemEntity newItem = selectedItem.get();
+
+            // Set the value that was added to the item's total price
+            BigDecimal addedValue = newItem.getUnitPrice().multiply(BigDecimal.valueOf(quantity));
+
+            // Add the provided quantity to the present item
             newItem.setQuantity(newItem.getQuantity() + quantity);
-            newItem.setTotalPrice(newItem.getTotalPrice().add(newItem.getUnitPrice().multiply(BigDecimal.valueOf(quantity))));
-            selectedCart.setCartPrice(selectedCart.getCartPrice().add(newItem.getTotalPrice()));
+
+            // Multiply the current quantity for the unit price for new total price
+            newItem.setTotalPrice(newItem.getUnitPrice().multiply(BigDecimal.valueOf(newItem.getQuantity())));
+
+            // Update the cart with the added value
+            selectedCart.setCartPrice(selectedCart.getCartPrice().add(addedValue));
+
+            // Decreased the current product stock
             selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() - quantity);
         } else {
             CartItemEntity cartItem = getCartItemEntity(quantity, selectedProduct, selectedCart);
@@ -97,6 +109,7 @@ public class CartService {
 
         selectedProduct.setStockQuantity(selectedProduct.getStockQuantity() + selectedItem.getQuantity());
         selectedCart.getCartItems().remove(selectedItem);
+        selectedCart.setCartPrice(selectedCart.getCartPrice().subtract(selectedItem.getTotalPrice()));
 
         productRepository.save(selectedProduct);
         cartRepository.save(selectedCart);
