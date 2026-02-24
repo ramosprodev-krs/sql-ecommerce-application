@@ -3,6 +3,7 @@ package com.ramosprodev.sql_application.controller;
 import com.ramosprodev.sql_application.dto.LoginDTO;
 import com.ramosprodev.sql_application.dto.RegisterDTO;
 import com.ramosprodev.sql_application.entity.UserEntity;
+import com.ramosprodev.sql_application.service.EmailService;
 import com.ramosprodev.sql_application.service.TokenService;
 import com.ramosprodev.sql_application.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,14 +29,23 @@ public class AuthenticationController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+    private final EmailService emailService;
 
     public AuthenticationController(@Lazy AuthenticationManager authenticationManager,
-                          TokenService tokenService,
-                          UserService userService) {
+                                    TokenService tokenService,
+                                    UserService userService,
+                                    EmailService emailService) {
+
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
         this.userService = userService;
+        this.emailService = emailService;
     }
+
+    /**
+     * This controller is usually the one the user would access first.
+     * Here, the user is able to register their account and access the application with their login.
+     **/
 
     // 1. Login
     @Operation(summary = "User login", description = "Logs the user in.")
@@ -67,6 +77,7 @@ public class AuthenticationController {
     public ResponseEntity<UserEntity> createUser(@RequestBody @Valid RegisterDTO registerDTO) {
         try {
             UserEntity createdUser = userService.registerUser(registerDTO);
+            emailService.sendWelcomeEmail(registerDTO.getEmail(), registerDTO.getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

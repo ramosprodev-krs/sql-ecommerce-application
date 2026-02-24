@@ -2,7 +2,9 @@ package com.ramosprodev.sql_application.controller;
 
 import com.ramosprodev.sql_application.entity.OrderEntity;
 import com.ramosprodev.sql_application.entity.UserEntity;
+import com.ramosprodev.sql_application.service.EmailService;
 import com.ramosprodev.sql_application.service.PurchaseService;
+import com.ramosprodev.sql_application.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -22,9 +25,13 @@ import java.util.NoSuchElementException;
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
+    private final UserService userService;
+    private final EmailService emailService;
 
-    public PurchaseController(PurchaseService purchaseService) {
+    public PurchaseController(PurchaseService purchaseService, UserService userService, EmailService emailService) {
         this.purchaseService = purchaseService;
+        this.userService = userService;
+        this.emailService = emailService;
     }
 
     /**
@@ -44,9 +51,15 @@ public class PurchaseController {
     })
     @PostMapping("/{userId}/deposit")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserEntity> depositBalance(@PathVariable Long userId, BigDecimal balance) {
+    public ResponseEntity<UserEntity> depositBalance(@PathVariable Long userId, @RequestParam BigDecimal balance) {
         try {
             UserEntity selectedUser = purchaseService.depositBalance(userId, balance);
+            emailService.sendDepositNotification(
+                    selectedUser.getEmail(),
+                    selectedUser.getUsername(),
+                    balance,
+                    selectedUser.getUserBalance()
+            );
             return ResponseEntity.ok(selectedUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -70,7 +83,10 @@ public class PurchaseController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<OrderEntity> completePurchase() {
         try {
-            OrderEntity generatedOrder= purchaseService.completePurchase();
+            OrderEntity generatedOrder = purchaseService.completePurchase();
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            UserEntity user = (UserEntity) userService.loadUserByUsername(username);
+            emailService.sendGeneratedOrder(user.getEmail(), user.getUsername(), generatedOrder);
             return ResponseEntity.ok(generatedOrder);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
