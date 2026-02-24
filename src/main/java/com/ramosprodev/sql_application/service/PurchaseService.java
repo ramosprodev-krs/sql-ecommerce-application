@@ -100,6 +100,7 @@ public class PurchaseService {
 
         // Emptying the user cart
         selectedCart.getCartItems().clear();
+        selectedCart.setCartPrice(BigDecimal.ZERO);
 
         // Saving the user
         userRepository.save(selectedUser);
