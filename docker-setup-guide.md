@@ -4,7 +4,7 @@
 Before proceeding, ensure you have the following tools properly installed on your system:  
 - [Java Development Kit (JDK 21)](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)  
 - [Docker Engine / Docker Desktop](https://www.docker.com/products/docker-desktop/)  
-- [Insomnia](https://insomnia.rest/download) or [Postman](https://www.postman.com/downloads/)
+- [Insomnia](https://insomnia.rest/download) or [Postman](https://www.postman.com/downloads/) (use if you judge necessary, as Swagger is already included).
 
 ---
 
