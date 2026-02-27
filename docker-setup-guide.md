@@ -11,6 +11,7 @@ Before proceeding, ensure you have the following tools properly installed on you
 ## The use of "docker-compose.yml"
 This project includes a **docker-compose.yml** file designed to orchestrate the **PostgreSQL** database and the **Spring Boot** application containers seamlessly.
 
-### 1. **Clone the repository** ```bash
+### 1. **Clone the repository** 
+```bash
 git clone [https://github.com/KalRSilva/sql-ecommerce-application.git](https://github.com/KalRSilva/sql-ecommerce-application.git)
 cd sql-ecommerce-application
