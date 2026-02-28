@@ -60,5 +60,5 @@ requests by providing the generated token in the locker icon:
 
 Once you provided the token, you have complete access to the Protected Endpoints (if your role ensures they are accessible).
 
-Now that you’ve finished this guide, you can return to the main documentation:
-[🔙📖 Go back to README] (https://github.com/ramosprodev-krs/sql-ecommerce-application)
+Now that you’ve finished this guide, you can return to the main documentation:  
+[🔙📖 Go back to README](https://github.com/ramosprodev-krs/sql-ecommerce-application)
