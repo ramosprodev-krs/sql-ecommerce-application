@@ -2,7 +2,7 @@
 In this guide you will learn the first steps of this application, including:
 - Locally running the app with Docker
 - Registering your first user
-- Login with your user
+- Logging in with your user
 - Authorizing endpoints with your JWT Token
 
 
