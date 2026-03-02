@@ -52,6 +52,7 @@ Finally, you can click the **/auth/register** api, and register you account by p
 In a few seconds, you will receive a confirmation from AWS SES, if the provided e-mail is
 authenticated in the service.
 
+##### Practical example
 Here's an example of this functionality, by using Swagger:
 <img src="https://i.imgur.com/A8vK0yA.png" width="1100">
 
@@ -67,19 +68,24 @@ Now, you can login by accesing the **/auth/login** endpoint, and simply providin
 }
 ```
 
+##### Practical example
 Here's an example:
 <img src="https://i.imgur.com/SJPjNcC.png" width="1100">
 
 Your token is now returned, for further authorization management:
 <img src="https://i.imgur.com/6OkwopZ.png">
 
-#### 4.2. Accessing Protected Endpoints (e.g., /product)
-Now that you have successfully registered your account, you can authorize the next protected 
-requests by providing the generated token in the locker icon:
+#### 4.3 Accessing Protected Endpoints
+Now that you have successfully logged in your account, you can authorize the next protected 
+requests by providing the generated token in the locker icon at the top of the Swagger page:
 
-(image to be added)
+Locker icon:
+<img src="https://i.imgur.com/l2OBUm6.png">
 
-Once you provided the token, you have complete access to the Protected Endpoints (if your role ensures they are accessible).
+Token screen:
+<img src="https://i.imgur.com/COXKn2l.png">
+
+Once you provided the token, you have complete access to the Protected Endpoints (if your role ensures the access).
 
 Now that you’ve finished this guide, you can return to the main documentation:  
 [🔙📖 Go back to README](https://github.com/ramosprodev-krs/sql-ecommerce-application)
