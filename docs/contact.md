@@ -9,4 +9,4 @@ If you liked this project, or would like to give your opinion about it, give me 
 ---
 
 #### Now that you’ve finished reading this file, you can return to the main documentation:  
-- [🔙📖 Go back to README](./README.md)
+- [🔙📖 Go back to README](../README.md)

@@ -18,7 +18,7 @@ A robust **E-commerce** application focused on security, data persistence, and c
 
 ## 🧭 Quick Navigation  
 - 🐳 [Running the application with Docker (Guide)](docker-setup-guide.md)  
-- 🔐 [Authentication & Security Flow (JWT)](jwt.md)  
-- 📄 [API Documentation (Swagger/OpenAPI)](api-doc.md)
-- 📩 [Contact me!](contact.md)  
+- 🔐 [Authentication & Security Flow (JWT)](docs/jwt.md)  
+- 📄 [API Documentation (Swagger/OpenAPI)](docs/api-doc.md)
+- 📩 [Contact me!](docs/contact.md)  
 ---

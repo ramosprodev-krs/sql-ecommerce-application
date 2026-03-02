@@ -18,27 +18,27 @@ you can check this file:
 
 ### 2.1. Authentication Controller (`/auth`)
 Handles user registration and login.
-* **Implementation:** [UserService](src/main/java/com/ramosprodev/sql_application/service/UserService.java), [TokenService](src/main/java/com/ramosprodev/sql_application/service/TokenService.java) and [EmailService](src/main/java/com/ramosprodev/sql_application/service/EmailService.java)
+* **Implementation:** [UserService](../src/main/java/com/ramosprodev/sql_application/service/UserService.java), [TokenService](../src/main/java/com/ramosprodev/sql_application/service/TokenService.java) and [EmailService](../src/main/java/com/ramosprodev/sql_application/service/EmailService.java)
 <img src="https://i.imgur.com/hj4LscS.png">
 
 ### 2.2. User Controller (`/user`)
 Handles user account management.
-* **Implementation:** [UserService](src/main/java/com/ramosprodev/sql_application/service/UserService.java)
+* **Implementation:** [UserService](../src/main/java/com/ramosprodev/sql_application/service/UserService.java)
 <img src="https://i.imgur.com/O9N6ziK.png">
 
 ### 2.3. Cart Controller (`/cart`)
 Handles user account management.
-* **Implementation:** [CartService](src/main/java/com/ramosprodev/sql_application/service/CartService.java)
+* **Implementation:** [CartService](../src/main/java/com/ramosprodev/sql_application/service/CartService.java)
 <img src="https://i.imgur.com/oHBPzJF.png">
 
 ### 2.4. Product Controller (`/product`)
 Manages the product catalog.
-* **Implementation:** [ProductService](src/main/java/com/ramosprodev/sql_application/service/ProductService.java)
+* **Implementation:** [ProductService](../src/main/java/com/ramosprodev/sql_application/service/ProductService.java)
 <img src="https://i.imgur.com/l1Pv7mu.png">
 
 ### 2.5. Purchase Controller (`/purchase`)
 Handles purchase operations.
-* **Implementation:** [PurchaseService](src/main/java/com/ramosprodev/sql_application/service/PurchaseService.java) and [EmailService](src/main/java/com/ramosprodev/sql_application/service/EmailService.java)
+* **Implementation:** [PurchaseService](../src/main/java/com/ramosprodev/sql_application/service/PurchaseService.java) and [EmailService](../src/main/java/com/ramosprodev/sql_application/service/EmailService.java)
 <img src="https://i.imgur.com/IC3Zg96.png">
 
 ---
