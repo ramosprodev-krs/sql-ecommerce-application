@@ -30,8 +30,8 @@ The JWT acts as a digital passport, carrying specific clearance levels that dete
 ### 3.1. Role	Access Level	Description:  
 ``` 
 ROLE_USER -	(Basic)	Can browse products, manage their own profile, and place orders.
-ROLE_MANAGER -	(Intermediate)	Can manage post, update, and delete products of its own.
-ROLE_ADMIN -	(Full)	Full system access, including user management and sensitive configurations.
+ROLE_MANAGER - (Intermediate)	Can manage post, update, and delete products of its own.
+ROLE_ADMIN - (Full)	Full system access, including user management and sensitive configurations.
 ```
 
 ## ⏳ 4. Security Constraints & Implementation
