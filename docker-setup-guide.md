@@ -35,22 +35,43 @@ Port 5432 -> Runs the PostgreSQL Database
 ```
 
 ### 4. Accessing the endpoints We are going to access the authentication and protected endpoints locally.
-#### 4.1. Accessing localhost:8080/swagger-ui.html
+#### 4.1. Registering with Swagger.
 
-You can authenticate directly by this endpoint via Swagger, by selecting the "Authentication controller".
-Next, you can click the **/auth/register** api, and register you account by providing a JSON on the following pattern:
+In order to register your first account, we need are accessing localhost:8080/swagger-ui.html.
+Next, you can visualize the **register** and **login** endpoints, by clicking the **"Authentication controller"** tab.
+
+Finally, you can click the **/auth/register** api, and register you account by providing a JSON on the following pattern:
 ```
 {
-  "username" : "user",
-  "password" : "password"  
+  "username" : "username",
+  "password" : "password",
+  "email" : "example@gmail.com"
 }
 ```
 
-The JWT Token will then be returned, ensuring the "login" and "authentication" methods are properly working.
-Practical example - Swagger
+In a few seconds, you will receive a confirmation from AWS SES, if the provided e-mail is
+authenticated in the service.
 
 Here's an example of this functionality, by using Swagger:
-<img src="https://i.imgur.com/0OUuhlQ.png" width="1100">
+<img src="https://i.imgur.com/A8vK0yA.png" width="1100">
+
+Confirmation e-mail successfully received:
+<img src="https://i.imgur.com/YBezApx.png" width="1100">
+
+#### 4.2 Logging in with Swagger
+Now, you can login by accesing the **/auth/login** endpoint, and simply providing the following JSON pattern:
+``` 
+{
+  "username" : "username",
+  "password" : "password"
+}
+```
+
+Here's an example:
+<img src="https://i.imgur.com/SJPjNcC.png" width="1100">
+
+Your token is now returned, for further authorization management:
+<img src="https://i.imgur.com/6OkwopZ.png">
 
 #### 4.2. Accessing Protected Endpoints (e.g., /product)
 Now that you have successfully registered your account, you can authorize the next protected 
