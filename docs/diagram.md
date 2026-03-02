@@ -1,7 +1,7 @@
 # 📑 Class diagram (PostgreSQL entities)  
 The following diagram was based on the entities present in the database:
 
-<img src="https://i.imgur.com/LgyrOmD.png">
+<img width=1000 src="https://i.imgur.com/LgyrOmD.png">
 
 ---
 
