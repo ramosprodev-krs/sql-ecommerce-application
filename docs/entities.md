@@ -104,7 +104,7 @@ Represents a snapshot of a product at the moment an order is finalized.
 
 ---
 
-## Enumerations
+## 🔢 Enumerations
 
 ### `UserRole`
 Defines the permissions within the system.
