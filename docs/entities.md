@@ -3,7 +3,7 @@
 This document describes the structure and relationships of the database entities used in the e-commerce system.
 
 You can also check the classes diagram in the following file:
-- 📑 [Classes diagram](docs/diagram.md)
+- 📑 [Class diagram (PostgreSQL entities)](docs/diagram.md)
 
 ---
 
