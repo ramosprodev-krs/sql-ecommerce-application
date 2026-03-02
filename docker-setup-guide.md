@@ -53,7 +53,7 @@ In a few seconds, you will receive a confirmation from AWS SES, if the provided 
 authenticated in the service.
 
 ##### Practical example
-Here's an example of this functionality, by using Swagger:
+Here's an example of this functionality:
 <img src="https://i.imgur.com/A8vK0yA.png" width="1100">
 
 Confirmation e-mail successfully received:
@@ -69,7 +69,7 @@ Now, you can login by accesing the **/auth/login** endpoint, and simply providin
 ```
 
 ##### Practical example
-Here's an example:
+Here's an example of this functionality:
 <img src="https://i.imgur.com/SJPjNcC.png" width="1100">
 
 Your token is now returned, for further authorization management:
@@ -79,10 +79,10 @@ Your token is now returned, for further authorization management:
 Now that you have successfully logged in your account, you can authorize the next protected 
 requests by providing the generated token in the locker icon at the top of the Swagger page:
 
-Locker icon:
+Locker icon:  
 <img src="https://i.imgur.com/l2OBUm6.png">
 
-Token screen:
+Token screen:  
 <img src="https://i.imgur.com/COXKn2l.png">
 
 Once you provided the token, you have complete access to the Protected Endpoints (if your role ensures the access).
