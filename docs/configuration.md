@@ -7,9 +7,9 @@ This document outlines the configuration classes used to manage security, docume
 Configures Spring Security to handle authentication and authorization.
 
 * **Key Features:**
-    * **JWT Authentication:** Uses a custom [`SecurityFilter`](src/main) to validate JWT tokens.
+    * **JWT Authentication:** Uses a custom [`SecurityFilter`](../src/main/java/com/ramosprodev/sql_application/filter/SecurityFilter.java to validate JWT tokens.
     * **Stateless Session:** Configured to `SessionCreationPolicy.STATELESS` as the application uses JWT instead of HTTP sessions.
-    * **Public Endpoints:** [`/auth/**`](/controller/AuthenticationController.java) and Swagger UI paths are open to public access.
+    * **Public Endpoints:** [`/auth/**`](../src/main/java/com/ramosprodev/sql_application/controller/AuthenticationController.java) and Swagger UI paths are open to public access.
     * **Protected Endpoints:** All other API paths require authentication.
     * **Password Encoding:** Uses `BCryptPasswordEncoder` for hashing user passwords.
     * **Method Security:** Enabled via `@EnableMethodSecurity` to allow `@PreAuthorize` annotations on controllers.
@@ -28,7 +28,7 @@ Customizes the OpenAPI documentation to support JWT authentication.
 Configures the Amazon Simple Email Service (SES) client for sending emails (e.g., welcome emails, deposit notifications).
 
 * **Credentials:** Retrieves AWS Access Key, Secret Key, and Region from application properties (`application.properties` or environment variables).
-* **Bean:** Creates a `SesClient` bean used by the [`EmailService`](src/main/java/com/ramosprodev/sql_application/service/EmailService.java) to interact with AWS SES.
+* **Bean:** Creates a `SesClient` bean used by the [`EmailService`](../src/main/java/com/ramosprodev/sql_application/service/EmailService.java) to interact with AWS SES.
 
 ---
 
