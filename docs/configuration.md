@@ -7,7 +7,7 @@ This document outlines the configuration classes used to manage security, docume
 Configures Spring Security to handle authentication and authorization.
 
 * **Key Features:**
-    * **JWT Authentication:** Uses a custom [`SecurityFilter`](/filter/SecurityFilter.java) to validate JWT tokens.
+    * **JWT Authentication:** Uses a custom [`SecurityFilter`](src/main) to validate JWT tokens.
     * **Stateless Session:** Configured to `SessionCreationPolicy.STATELESS` as the application uses JWT instead of HTTP sessions.
     * **Public Endpoints:** [`/auth/**`](/controller/AuthenticationController.java) and Swagger UI paths are open to public access.
     * **Protected Endpoints:** All other API paths require authentication.
