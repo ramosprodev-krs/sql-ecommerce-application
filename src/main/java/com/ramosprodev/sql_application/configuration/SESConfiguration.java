@@ -24,11 +24,11 @@ public class SESConfiguration {
      */
 
     // 1. Gets the access key
-    @Value("${aws.accessKeyId}")
+    @Value("${aws.access.key.id}")
     private String accessKey;
 
     // 2. Gets the secret access key
-    @Value("${aws.secretAccessKey}")
+    @Value("${aws.secret.access.key}")
     private String secretKey;
 
     // 3. Gets the aws region
