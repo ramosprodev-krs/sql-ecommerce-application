@@ -54,7 +54,7 @@ public class UserEntity implements UserDetails {
     @JsonIgnore
     private CartEntity cart;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<OrderEntity> ordersList = new ArrayList<>();
 
