@@ -166,8 +166,11 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void deleteUser(Long id) {
         // Ensures the user exists
-        if (!userRepository.existsById(id)){
-            throw new NoSuchElementException("User not found.");
+        var selectedUser = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        if (selectedUser.getCart() != null && !selectedUser.getCart().getCartItems().isEmpty()) {
+            throw new IllegalStateException("Cannot delete user: Cart is not empty. Please clear the cart first.");
         }
 
         userRepository.deleteById(id);
