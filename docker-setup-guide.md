@@ -59,7 +59,7 @@ Here's an example of this functionality:
 Confirmation e-mail successfully received:
 <img src="https://i.imgur.com/YBezApx.png" width="1100">
 
-#### 4.2 Logging in with Swagger
+#### 4.2. Logging in with Swagger
 Now, you can login by accesing the **/auth/login** endpoint, and simply providing the following JSON pattern:
 ``` 
 {
@@ -75,7 +75,7 @@ Here's an example of this functionality:
 Your token is now returned, for further authorization management:
 <img src="https://i.imgur.com/6OkwopZ.png">
 
-#### 4.3 Accessing Protected Endpoints
+#### 4.3. Accessing Protected Endpoints
 Now that you have successfully logged in your account, you can authorize the next protected 
 requests by providing the generated token in the locker icon at the top of the Swagger page:
 
