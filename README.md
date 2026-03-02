@@ -21,5 +21,6 @@ A robust **E-commerce** application focused on security, data persistence, and c
 - 🔐 [Authentication & Security Flow (JWT)](docs/jwt.md)  
 - 📄 [API Documentation (Swagger/OpenAPI)](docs/api-doc.md)
 - 📊 [Database entities (PostgreSQL)](docs/entities.md)
+- ⚙️ [Configuration classes](docs/configuration.md)
 - 📩 [Contact me!](docs/contact.md)  
 ---
