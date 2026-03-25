@@ -2,7 +2,7 @@
 **Project Start Date: January 15, 2026  
 Completion Date: February 24, 2026**  
 
-This project was developed in **Java** using the **Spring Boot**.
+This project was developed in **Java** using the **Spring Boot 3.4.2**.
 A robust **E-commerce** application focused on security, data persistence, and cloud service integration (**AWS**).  
 
 ### Technologies used:    
