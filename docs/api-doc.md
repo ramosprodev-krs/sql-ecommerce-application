@@ -2,7 +2,7 @@
 The application provides an interactive **Swagger UI** (the same as we used initially) documentation, allowing us to visualize and test all endpoints directly from the browser.
 
 ## 1. Accessing the Documentation
-As mentioned before, once the application is running via Docker, access the documentation at:
+As mentioned before, once the application is running via Docker, access the documentation at:  
 **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
 
 ## 2. 🛠️ API Structure & Implementation
