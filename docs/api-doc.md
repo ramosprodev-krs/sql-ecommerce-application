@@ -5,8 +5,6 @@ The application provides an interactive **Swagger UI** (the same as we used init
 As mentioned before, once the application is running via Docker, access the documentation at:
 **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
 
----
-
 ## 2. 🛠️ API Structure & Implementation
 The API is organized into functional controllers. The business logic for these endpoints is located in the **Services** directory.  
 Each correspondent service is linked next to the mentioned controller, there it is possible to further visualize how each method was  
@@ -40,8 +38,6 @@ Manages the product catalog.
 Handles purchase operations.
 * **Implementation:** [PurchaseService](../src/main/java/com/ramosprodev/sql_application/service/PurchaseService.java) and [EmailService](../src/main/java/com/ramosprodev/sql_application/service/EmailService.java)
 <img src="https://i.imgur.com/IC3Zg96.png">
-
----
 
 ## 3. Testing Protected Endpoints
 
