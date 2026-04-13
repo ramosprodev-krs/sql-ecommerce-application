@@ -23,12 +23,12 @@ Handles user registration and login.
 
 ### 2.2. User Controller (`/user`)
 Handles user account management.
-* **Implementation:** [UserService](../src/main/java/com/ramosprodev/sql_application/service/UserService.java)
+* **Implementation:** [UserService](../src/main/java/com/ramosprodev/sql_application/service/UserService.java).
 <img src="https://i.imgur.com/O9N6ziK.png">
 
 ### 2.3. Cart Controller (`/cart`)
 Handles user account management.
-* **Implementation:** [CartService](../src/main/java/com/ramosprodev/sql_application/service/CartService.java)
+* **Implementation:** [CartService](../src/main/java/com/ramosprodev/sql_application/service/CartService.java).
 <img src="https://i.imgur.com/oHBPzJF.png">
 
 ### 2.4. Product Controller (`/product`)
